@@ -1,0 +1,1 @@
+public class Community extends TeritoryUnit {}
