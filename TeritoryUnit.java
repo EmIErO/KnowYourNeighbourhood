@@ -1,6 +1,6 @@
 import java.util.*;
 
-public abstract class TeirtoryUnit {
+public abstract class TeritoryUnit {
     private int provinceNo;
     private int countyNo;
     private int communityNo;
@@ -26,7 +26,7 @@ public abstract class TeirtoryUnit {
     }
 
     public int getCommunityNo() {
-        return this.communityNo
+        return this.communityNo;
     }
 
     public int getCommunityTypeNo() {
@@ -39,5 +39,9 @@ public abstract class TeirtoryUnit {
 
     public String getCommunityType() {
         return this.communityType;
+    }
+
+    public String toString() {
+        return provinceNo + "::" + countyNo + "::" + communityNo + "::" + communityTypeNo + "::" + communityName + "::" + communityType;
     }
 }
