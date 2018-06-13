@@ -12,9 +12,22 @@ public class ProvinceData {
     private final int COMMUNITY_NAME = 4;
     private final int COMMUNITY_TYPE = 5;
 
-    public ProvinceData(String fileName) throws FileNotFoundException, NumberFormatException{
+    public ProvinceData(String fileName) {
         this.teritoryUnits = new ArrayList<TeritoryUnit>();
-        readDataFromFile(fileName);
+        
+        try {
+            readDataFromFile(fileName);
+
+        } catch (FileNotFoundException e1) {
+            System.out.println("No matching file.");
+        } catch (NumberFormatException e2) {
+            System.out.println("Failed while parsing. ProvinceData has not been created.");
+        }
+        
+    }
+
+    public List<TeritoryUnit> getTeritoryUnits() {
+        return this.teritoryUnits;
     }
 
     private void readDataFromFile(String fileName) throws FileNotFoundException {
@@ -24,7 +37,6 @@ public class ProvinceData {
             String line = scanner.nextLine();
             if (line.equals("woj\tpow\tgmi\trgmi\tnazwa\ttyp")) {
                 continue;
-                //System.out.println("Line: " + line);  
             } else {
                 String arr[] = line.split("\t");
                 addTeritoryUnit(arr);
@@ -39,14 +51,42 @@ public class ProvinceData {
             this.teritoryUnits.add(new Province(convertToInt(arr[PROVINCE_NO]), arr[COMMUNITY_NAME], arr[COMMUNITY_TYPE]));
 
         } else if (arr[COMMUNITY_NO].equals("") && arr[COMMUNITY_TYPE_NO].equals("")) {
-            
-            this.teritoryUnits.add(new County(convertToInt(arr[PROVINCE_NO]), convertToInt(arr[COUNTY_NO]), arr[COMMUNITY_NAME], arr[COMMUNITY_TYPE]));
+            addCounty(arr);
 
         } else {
-            
-            this.teritoryUnits.add(new Community(convertToInt(arr[PROVINCE_NO]), convertToInt(arr[COUNTY_NO]), convertToInt(arr[COMMUNITY_NO]), convertToInt(arr[COMMUNITY_TYPE_NO]), 
-                                                arr[COMMUNITY_NAME], arr[COMMUNITY_TYPE]));
+            addCommunity(arr);
 
+        }
+    }
+
+    private void addCounty(String arr[]) {
+        if (arr[COMMUNITY_TYPE].equals("powiat")) {
+            this.teritoryUnits.add(new County(convertToInt(arr[PROVINCE_NO]), convertToInt(arr[COUNTY_NO]), arr[COMMUNITY_NAME], arr[COMMUNITY_TYPE]));
+        } else {
+            this.teritoryUnits.add(new CountyAndCity(convertToInt(arr[PROVINCE_NO]), convertToInt(arr[COUNTY_NO]), arr[COMMUNITY_NAME], arr[COMMUNITY_TYPE]));
+        }
+    }
+
+    private void addCommunity(String arr[]) {
+        if (arr[COMMUNITY_TYPE].equals("gmina miejska")) {
+            this.teritoryUnits.add(new CityCommunity(convertToInt(arr[PROVINCE_NO]), convertToInt(arr[COUNTY_NO]), convertToInt(arr[COMMUNITY_NO]), convertToInt(arr[COMMUNITY_TYPE_NO]), 
+                                    arr[COMMUNITY_NAME], arr[COMMUNITY_TYPE]));
+
+        } else if(arr[COMMUNITY_TYPE].equals("gmina wiejska")) {
+            this.teritoryUnits.add(new CountryCommunity(convertToInt(arr[PROVINCE_NO]), convertToInt(arr[COUNTY_NO]), convertToInt(arr[COMMUNITY_NO]), convertToInt(arr[COMMUNITY_TYPE_NO]), 
+                                    arr[COMMUNITY_NAME], arr[COMMUNITY_TYPE]));
+        } else if(arr[COMMUNITY_TYPE].equals("gmina miejsko-wiejska")) {
+            this.teritoryUnits.add(new CityAndCountryCommunity(convertToInt(arr[PROVINCE_NO]), convertToInt(arr[COUNTY_NO]), convertToInt(arr[COMMUNITY_NO]), convertToInt(arr[COMMUNITY_TYPE_NO]), 
+                                    arr[COMMUNITY_NAME], arr[COMMUNITY_TYPE]));
+        } else if(arr[COMMUNITY_TYPE].equals("obszar wiejski")) {
+            this.teritoryUnits.add(new CountryArea(convertToInt(arr[PROVINCE_NO]), convertToInt(arr[COUNTY_NO]), convertToInt(arr[COMMUNITY_NO]), convertToInt(arr[COMMUNITY_TYPE_NO]), 
+                                    arr[COMMUNITY_NAME], arr[COMMUNITY_TYPE]));
+        } else if(arr[COMMUNITY_TYPE].equals("miasto")) {
+            this.teritoryUnits.add(new City(convertToInt(arr[PROVINCE_NO]), convertToInt(arr[COUNTY_NO]), convertToInt(arr[COMMUNITY_NO]), convertToInt(arr[COMMUNITY_TYPE_NO]), 
+                                    arr[COMMUNITY_NAME], arr[COMMUNITY_TYPE]));   
+        } else {
+            this.teritoryUnits.add(new Delegature(convertToInt(arr[PROVINCE_NO]), convertToInt(arr[COUNTY_NO]), convertToInt(arr[COMMUNITY_NO]), convertToInt(arr[COMMUNITY_TYPE_NO]), 
+                                    arr[COMMUNITY_NAME], arr[COMMUNITY_TYPE]));         
         }
     }
 
@@ -55,17 +95,9 @@ public class ProvinceData {
     }
 
     public static void main(String args[]) {
-        try {
-            ProvinceData test = new ProvinceData("malopolska.csv");
-            for (TeritoryUnit unit: test.teritoryUnits) {
-                System.out.println(unit.toString());
-            }
-        } catch (FileNotFoundException e1) {
-            System.out.println("No matching file.");
-        } catch (NumberFormatException e2) {
-            System.out.println("Failed while parsing.");
+        ProvinceData test = new ProvinceData("malopolska.csv");
+        for (TeritoryUnit unit: test.teritoryUnits) {
+            System.out.println(unit.toString());
         }
-        
-        
     }
 }
