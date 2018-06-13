@@ -30,9 +30,37 @@ public class Statistics {
         return names;
     }
 
+    public String findCounty() {    // finds county with the largest number of communities
+        int number = 0;
+        String countyName = "";
+        for (TeritoryUnit unit: this.data.getTeritoryUnits()) {
+            if (unit instanceof County) {
+                int amountOfCommunities = countAppearances(unit.getCountyNo());
+                if (amountOfCommunities > number) {
+                    number = amountOfCommunities;
+                    countyName = unit.getCommunityName();
+                }
+            }
+        }
+        return countyName;
+    }
+
+    private int countAppearances(int number) {
+        int amount = 0;
+        for (TeritoryUnit unit: this.data.getTeritoryUnits()) {
+            if (unit.getCountyNo() == number) {
+                amount++;
+            } if (unit.getCountyNo() > number) {
+                break;
+            }
+        }
+        return amount;
+    }
+
     public static void main(String args[]) {
         Statistics test = new Statistics("malopolska.csv");
         
         System.out.println(test.takeCitiesWithLongestNames());
+        System.out.println(test.findCounty());
     }
 }
