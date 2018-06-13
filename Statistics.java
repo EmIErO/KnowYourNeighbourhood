@@ -57,10 +57,25 @@ public class Statistics {
         return amount;
     }
 
+    public List<String> findLocationsWithMultipleCategories() {
+        List<String> locations = new ArrayList<String>();
+        List<String> duplicates = new ArrayList<String>();
+        for (TeritoryUnit unit: this.data.getTeritoryUnits()) {
+            if (!locations.contains(unit.getCommunityName())) {
+                locations.add(unit.getCommunityName());
+            } else if (locations.contains(unit.getCommunityName()) && !duplicates.contains(unit.getCommunityName())) {
+                duplicates.add(unit.getCommunityName());
+            } else continue;
+        }
+        Collections.sort(duplicates);
+        return duplicates;
+    }
+
     public static void main(String args[]) {
         Statistics test = new Statistics("malopolska.csv");
         
         System.out.println(test.takeCitiesWithLongestNames());
         System.out.println(test.findCounty());
+        System.out.println(test.findLocationsWithMultipleCategories());
     }
 }
