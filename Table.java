@@ -1,58 +1,44 @@
-public class Table {
+import java.util.*;
+
+abstract class Table {
 
     private final int SIGN_SIZE = 1;
-    
+
+    private int totalLength;
+    private int columnOneLength;
+    private int columnTwoLength;
+
+    private List<TeritoryUnit> units;
+
+    public Table(List<TeritoryUnit> units, int columnOneLength, int columnTwoLength) {
+        this.units = units;
+        this.columnOneLength = columnOneLength;
+        this.columnTwoLength = columnTwoLength;
+        this.totalLength = columnOneLength + columnTwoLength + 3 * SIGN_SIZE;
+    }
+
     public String getSmallLine(int length) {
         return String.join("", Collections.nCopies(n, "-"));
     }
 
-    public String getTopLine(int length) {
-        return "/" + getSmallLine(length) + "\\" + "\n";
+    public String getTopLine() {
+        return "/" + getSmallLine(this.totalLength) + "\\" + "\n";
     }
 
-    public String getBottomLine(int length) {
-        return "\\" + getSmallLine(length) + "/" + "\n";
+    public String getBottomLine() {
+        return "\\" + getSmallLine(this.totalLength) + "/" + "\n";
     }
 
-    public String getSeparatingLine(int length1, int length2) {
-        return "|" + getSmallLine(length1) + "+" + getSmallLine(length2) + "|"  + "\n";
+    public String getSeparatingLine() {
+        return "|" + getSmallLine(this.columnOneLength) + "+" + getSmallLine(this.columnTwoLength) + "|"  + "\n";
     }
 
-    public String getInfoLineType1(String info1, int length1) {
-        return "|" + StringUtils.center(info1, length1) + "|" + "\n";
-    }
+    public abstract String getInfoLine(String... args);
 
-    public String getInfoLineType2(String info1, String info2, int length1, int length2) {
-        return "|" + StringUtils.center(info1, length1) + "|" + StringUtils.center(info2, length2) + "|" + "\n";
-    }
+    public abstract String getTable();
 
-    public String getTableType1(String header, int columnOneLength, int columnTwoLength, List<TeritoryUnit> units) {
-        int totalLength = columnOneLength + columnTwoLength + 3 * SIGN_SIZE;
-        String table = "";
+    private abstract String getTopOfTable();
 
-        table += getTopOfTable(units, totalLength);
+    private abstract String getInfoForTable();
 
-        for (TeritoryUnit unit: units) {}
-    }
-
-    private String getTopOfTable(List<TeritoryUnit> units; int length) {
-        String topOfTable = "";
-
-        for (TeritoryUnit unit: units) {
-            if (unit instanceof Province) {
-                table += getTopLine(length);
-                table += getInfoLineType1(unit.getCommunityName(), length);
-            }
-        }
-        return topOfTable;
-    }
-
-    private String getInfoForTable(List<TeritoryUnit> units, int columnOneLength, int columnTwoLength) {
-        String infoForTable = "";
-
-        for (TeritoryUnit unit: units) {
-            infoForTable += getSeparatingLine(columnOneLength, columnTwoLength);
-            infoForTable += getInfoLineType2()
-        }
-    }
 }
