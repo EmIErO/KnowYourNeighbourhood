@@ -1,4 +1,4 @@
-public class Province extends TeritoryUnit {
+public class Province extends TeritoryUnit   {
 
     public static Integer numberOfProvinces = 0;
 

@@ -1,6 +1,6 @@
 import java.util.*;
 
-public abstract class TeritoryUnit {
+public abstract class TeritoryUnit implements Comparable<TeritoryUnit> {
     private int provinceNo;
     private int countyNo;
     private int communityNo;
@@ -43,5 +43,11 @@ public abstract class TeritoryUnit {
 
     public String toString() {
         return provinceNo + "::" + countyNo + "::" + communityNo + "::" + communityTypeNo + "::" + communityName + "::" + communityType;
+    }
+
+    //@Override
+    public int compareTo(TeritoryUnit unit) {
+        int compareNameLength = ((TeritoryUnit)unit).getCommunityName().length();
+        return compareNameLength - this.getCommunityName().length();
     }
 }
