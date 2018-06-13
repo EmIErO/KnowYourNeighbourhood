@@ -2,36 +2,32 @@ import java.util.*;
 
 public class TableType1 extends Table {
 
-    public TableType1(List<TeritoryUnit> units, int columnOneLength, int columnTwoLength) {
-        super(units, columnOneLength, columnTwoLength);
+    public TableType1(List<TeritoryUnit> units) {
+        super(units, 43, 7, 35);
     }
 
-    public String getInfoLineType(String info1) {
-        return "|" + StringUtils.center(info1, this.totalLength) + "|" + "\n";
+    private String getInfoLineHeader(String info1) {
+        return "|               " + String.format("%-28s|%n", info1);
     }
 
-    public String getTable() {
-        String table = "";
-
-        table += getTopOfTable();
-
-        for (TeritoryUnit unit: units) {}
-    }
-
-    private String getTopOfTable() {
+    public String getTopOfTable() {
         String topOfTable = "";
 
         for (TeritoryUnit unit: this.units) {
             if (unit instanceof Province) {
-                table += getTopLine(this.totalLength);
-                table += getInfoLineType1(unit.getCommunityName(), this.totalLength);
+                topOfTable += getTopLine();
+                topOfTable += getInfoLineHeader(unit.getCommunityName());
                 break;
             }
         }
         return topOfTable;
     }
 
-    private String getInfoForTable() {
+    public String getInfoLine(String info1, String info2) {
+        return String.format("|%6s | %-34s|%n", info1, info2);
+    }
+
+    public String getInfoForTable() {
         String infoForTable = "";
 
         List<String> unitNames = Arrays.asList("wojewódźtwo", "powiaty", "gmina miejska", "gmina wiejska", "gmina miejsko-wiejska",
@@ -41,11 +37,33 @@ public class TableType1 extends Table {
                                             CountryCommunity.numberOfCountryCommunities, CityAndCountryCommunity.numberOfCityAndCountryCommunities,
                                             CountryArea.numberOfCountryAreas, City.numberOfCities, CountyAndCity.numberOfCountiesAndCities,
                                             Delegature.numberOfDelegatures);
-                                            
-        for (int i = 0; int < uni.size(); i++) {
-            infoForTable += getSeparatingLine(this.columnOneLength, this.columnTwoLength);
-            infoForTable += getInfoLineType2(unitNames.get(i), unitNo.get(i));
+        List<String> convertedUnitNo = convertList(unitNo);
+
+        for (int i = 0; i < unitNames.size(); i++) {
+            infoForTable += getSeparatingLine();
+            infoForTable += getInfoLine(convertedUnitNo.get(i), unitNames.get(i));
         }
         return infoForTable;
+    }
+
+    private List<String> convertList(List<Integer> list) {
+        List<String> convertedNumbers = new ArrayList<String>();
+        for (Integer number: list) {
+            convertedNumbers.add(String.valueOf(number));
+        }
+        return convertedNumbers;
+    }
+
+    public static void main(String args[]) {
+        ProvinceData testData = new ProvinceData("malopolska.csv");
+
+        TableType1 test = new TableType1(testData.getTeritoryUnits());
+        System.out.println(test.getTable());
+
+        for (TeritoryUnit unit: testData.getTeritoryUnits()) {
+            if (unit instanceof Delegature) {
+                System.out.println(unit.toString());
+            }
+        }
     }
 }               

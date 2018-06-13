@@ -68,7 +68,7 @@ public class ProvinceData {
     }
 
     private void addCommunity(String arr[]) {
-        if (arr[COMMUNITY_TYPE].equals("gmina miejska")) {
+        if (arr[COMMUNITY_TYPE].trim().equals("gmina miejska")) {
             this.teritoryUnits.add(new CityCommunity(convertToInt(arr[PROVINCE_NO]), convertToInt(arr[COUNTY_NO]), convertToInt(arr[COMMUNITY_NO]), convertToInt(arr[COMMUNITY_TYPE_NO]), 
                                     arr[COMMUNITY_NAME], arr[COMMUNITY_TYPE]));
 

@@ -2,27 +2,25 @@ import java.util.*;
 
 abstract class Table {
 
-    private final int SIGN_SIZE = 1;
+    protected int totalLength;
+    protected int columnOneLength;
+    protected int columnTwoLength;
 
-    private int totalLength;
-    private int columnOneLength;
-    private int columnTwoLength;
+    protected List<TeritoryUnit> units;
 
-    private List<TeritoryUnit> units;
-
-    public Table(List<TeritoryUnit> units, int columnOneLength, int columnTwoLength) {
-        this.units = units;
+    public Table(List<TeritoryUnit> units, int totalLength, int columnOneLength, int columnTwoLength) {
+        this.totalLength = totalLength;
         this.columnOneLength = columnOneLength;
         this.columnTwoLength = columnTwoLength;
-        this.totalLength = columnOneLength + columnTwoLength + 3 * SIGN_SIZE;
+        this.units = units;
     }
 
     public String getSmallLine(int length) {
-        return String.join("", Collections.nCopies(n, "-"));
+        return String.join("", Collections.nCopies(length, "-"));
     }
 
     public String getTopLine() {
-        return "/" + getSmallLine(this.totalLength) + "\\" + "\n";
+        return "\n/" + getSmallLine(this.totalLength) + "\\" + "\n";
     }
 
     public String getBottomLine() {
@@ -33,12 +31,20 @@ abstract class Table {
         return "|" + getSmallLine(this.columnOneLength) + "+" + getSmallLine(this.columnTwoLength) + "|"  + "\n";
     }
 
-    public abstract String getInfoLine(String... args);
+    public String getTable() {
+        String table = "";
 
-    public abstract String getTable();
+        table += getTopOfTable();
+        table += getInfoForTable();
+        table += getBottomLine();
 
-    private abstract String getTopOfTable();
+        return table;
+    }
 
-    private abstract String getInfoForTable();
+    public abstract String getInfoLine(String info1, String info2);
+
+    public abstract String getTopOfTable();
+
+    public abstract String getInfoForTable();
 
 }
