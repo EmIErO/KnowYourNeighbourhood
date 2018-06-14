@@ -9,8 +9,11 @@ public class Statistics {
     public Statistics(String fileName) {
         this.data = new ProvinceData(fileName);
         this.searchedUnits = new ArrayList<TeritoryUnit>();
-        findCities();
     } 
+
+    public List<TeritoryUnit> getSearchedUnits() {
+        return this.searchedUnits;
+    }
 
     public void findCities() {
         List<TeritoryUnit> cities = new ArrayList<TeritoryUnit>();
