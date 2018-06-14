@@ -21,7 +21,7 @@ public class Neighbourhood {
     private void run() {
         while (isRunning) {
             printMenu();
-            getInput();
+            getInput("Option: ");
             handleMenu();
         }
         
@@ -35,17 +35,46 @@ public class Neighbourhood {
                                                 "Display locations, that belong to more than one category",
                                                 "Advanced search");
 
-        System.out.println("What would you like to do:\n");
+        System.out.println("\nWhat would you like to do:\n");
         for (int i = 1; i < options.size(); i++) {
             System.out.println("\t" + "(" + i + ") " + options.get(i));
         }
-        System.out.println("\t" + "(0) " + options.get(0));
+        System.out.println("\t" + "(0) " + options.get(0) + "\n\n");
     }
 
-    private void getInput() {
-        System.out.print("Option: ");
+    private void getInput(String message) {
+        System.out.print(message);
         this.currentInput = this.reader.nextLine();
     }
 
-    
+    private void handleMenu() {
+        switch (this.currentInput) {
+                case "0":
+                    this.isRunning = false;
+                    break;
+                case "1":
+                    TableType1 stat = new TableType1(this.stat.getProvinceData().getTeritoryUnits());
+                    System.out.println(stat.getTable());
+                    break;
+                case "2":
+                    this.stat.findCities();
+                    System.out.println(this.stat.takeCitiesWithLongestNames());
+                    break;
+                case "3":
+                    System.out.println(this.stat.findCounty());
+                    break;
+                case "4":
+                    for (String name: this.stat.findLocationsWithMultipleCategories()) {
+                        System.out.println(name);
+                    }
+                    break;
+                case "5":
+                    getInput("Advanced search: ");
+                    this.stat.findMatchingUnits(this.currentInput);
+
+                    TableType2 resultTable = new TableType2(this.stat.getSearchedUnits(), Arrays.asList("LOCATION", "TYPE"));
+                    System.out.println(resultTable.getTable());
+                    break;
+        }
+    }
 }

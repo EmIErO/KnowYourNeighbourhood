@@ -11,6 +11,10 @@ public class Statistics {
         this.searchedUnits = new ArrayList<TeritoryUnit>();
     } 
 
+    public ProvinceData getProvinceData() {
+        return this.data;
+    }
+
     public List<TeritoryUnit> getSearchedUnits() {
         return this.searchedUnits;
     }
@@ -77,6 +81,8 @@ public class Statistics {
     }
 
     public void findMatchingUnits(String pattern) {
+        this.searchedUnits.clear();
+        
         for (TeritoryUnit unit: this.data.getTeritoryUnits()) {
             if (matchWithUnit(unit, pattern)) {
                 this.searchedUnits.add(unit);
