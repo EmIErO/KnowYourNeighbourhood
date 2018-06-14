@@ -17,6 +17,7 @@ public class TableType2 extends Table {
 
         topOfTable += getTopLine();
         topOfTable += getInfoLine(this.header.get(FIRST_ON_LIST), this.header.get(SECOND_ON_LIST));
+        topOfTable += getSeparatingLine();
 
         return topOfTable;
     }

@@ -4,9 +4,11 @@ import java.io.*;
 public class Statistics {
     private ProvinceData data;
     private List<TeritoryUnit> citiesWithLongestNames;
+    private List<TeritoryUnit> searchedUnits;
 
     public Statistics(String fileName) {
         this.data = new ProvinceData(fileName);
+        this.searchedUnits = new ArrayList<TeritoryUnit>();
         findCities();
     } 
 
@@ -71,11 +73,50 @@ public class Statistics {
         return duplicates;
     }
 
+    public void findMatchingUnits(String pattern) {
+        for (TeritoryUnit unit: this.data.getTeritoryUnits()) {
+            if (matchWithUnit(unit, pattern)) {
+                this.searchedUnits.add(unit);
+            }
+        }
+        if (!this.searchedUnits.isEmpty()) {
+            sortUnitsAlphabetically();
+        }
+    }
+
+    private boolean matchWithUnit(TeritoryUnit unit, String pattern) {
+        return unit.getCommunityName().toLowerCase().contains(pattern.toLowerCase());
+    }
+
+    private void sortUnitsAlphabetically() {
+        Collections.sort(this.searchedUnits, new Comparator() {
+
+        public int compare(Object o1, Object o2) {
+
+            String comName1 = ((TeritoryUnit) o1).getCommunityName();
+            String comName2 = ((TeritoryUnit) o2).getCommunityName();
+            int sComp = comName1.compareTo(comName2);
+
+            if (sComp != 0) {
+               return sComp;
+            } 
+
+            String type1 = ((TeritoryUnit) o1).getCommunityType();
+            String type2 = ((TeritoryUnit) o2).getCommunityType();
+            return type1.compareTo(type2);
+    }});
+    }
+
     public static void main(String args[]) {
         Statistics test = new Statistics("malopolska.csv");
         
         System.out.println(test.takeCitiesWithLongestNames());
         System.out.println(test.findCounty());
-        System.out.println(test.findLocationsWithMultipleCategories());
+        System.out.println(test.findLocationsWithMultipleCategories() + "\n");
+
+        test.findMatchingUnits("tar");
+        TableType2 testTable = new TableType2(test.searchedUnits, Arrays.asList("LOCATION", "TYPE"));
+        System.out.println(testTable.getTable());
+        
     }
 }
